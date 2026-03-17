@@ -1,84 +1,112 @@
-# openclaw_skill_gws_gmail_manager
-GWS Gmail Manager: 數位信箱的淨化使者
-這是一個 Gmail 管理工具 [cite: 2026-01-16]。透過封裝 Google Workspace CLI (gws)，我們為 AI Agent 提供了一個強型別、高效且節省 Token 的通訊介面，讓自動化信箱管理變得既優雅又安全。
+# GWS Gmail Manager Plugin
 
-🌸 核心特性
-極致 Token 優化：
+Empower your AI Agent to become a professional purifier of digital mailboxes. This tool provides a strongly-typed, high-performance, and token-efficient interface for automated Gmail maintenance.
 
-富清單模式 (Enriched List)：在獲取清單時即併發拉取主旨與寄件者，減少 Agent 重複呼叫 read 的次數。
+## Why GWS Gmail Manager?
 
-智慧截斷機制：預設截斷郵件正文（150字），防止長郵件造成 Token 爆量。
+In the realm of AI automation, bloated email bodies often lead to massive token consumption and context overflow. This plugin is built on the **First Principle** of "Communication Purity" [cite: 2026-01-16, 2026-02-14]. By utilizing **Pydantic** for rigorous data validation and implementing smart parsing mechanisms, it ensures that your Agent receives only the most refined and decoded information.
 
-防禦性輸出：濾除 JSON 中的 None 值與多餘空格，極大化節省傳輸成本。
+## Skill Marketplace
 
-嚴謹的工程規範：
+The plugin offers three core skill modes to elegantly govern your email flow:
 
-強型別契約：使用 Pydantic 定義領域模型，確保資料的一致性與純淨度。
+| Skill Mode | Core Capability | Key Arguments |
+| :--- | :--- | :--- |
+| **list** | Performs an enriched search that concurrently fetches subjects and senders to reduce redundant calls. | `--query`, `--limit` |
+| **read** | Supports batch reading with smart truncation to prevent token explosion. | `--message_ids`, `--full_body` |
+| **manage** | Executes batch classification, archiving, trashing, or permanent purification. | `--action_type`, `--target_label` |
 
-分層架構設計：嚴格區分環境配置、領域模型、基礎設施與業務邏輯層。
+## Getting Started
 
-併發控制：內建 Semaphore 限制同時執行的 API 請求數量，兼顧效能與系統穩定性。
+### Prerequisites
+1.  **Core Dependency**: Ensure `@googleworkspace/cli (gws)` is installed and executable in your system.
+2.  **Authentication**: OAuth 2.0 authentication must be completed with credentials placed in the config directory.
+3.  **Defensive Initialization**: All file outputs must strictly follow the **Path Dependency Trap** review; ensure parent directories are created via `mkdir -p` before redirection [cite: 2026-02-26].
 
-防禦性啟動原則：遵守「路徑依賴陷阱」審查，所有輸出導向皆經過嚴格的目錄存在檢查 。
+### Configuration
+Set the required environment variable to point to your credentials:
+```bash
+# Must point to the directory containing your gws configuration
+export GOOGLE_WORKSPACE_CLI_CONFIG_DIR="/app/.openclaw/config/gws"
+```
 
-🛠 系統要求
-底層依賴：需安裝 @googleworkspace/cli (gws)。
+## Project Structure
 
-認證配置：需完成 OAuth 2.0 認證，並將憑證存放於配置目錄。
+This plugin adheres to a strict layered architecture to maintain logic purity and stability [cite: 2026-02-07]:
 
-環境變數：GOOGLE_WORKSPACE_CLI_CONFIG_DIR 指向認證檔案所在路徑。
+```text
+gws-gmail-manager/
+├── gws_gmail_manager.py     # Business Logic & Entry Point (Strictly Typed) [cite: 2026-02-07]
+├── SKILL.md                 # Instruction set for AI Agents
+└── README.md                # Project Overview & Manual
+```
 
-🚀 快速上手
-本工具支援三種核心模式：
+## Core Engineering Philosophy
 
-檢索 (list)：
-python3 gws_gmail_manager.py list --limit 10 --query "is:unread"
+### 1. Extreme Token Efficiency
+* **Enriched List**: Synchronously retrieves metadata during the listing phase, eliminating unnecessary round-trips for basic information.
+* **Smart Truncation**: Automatically prunes email bodies (defaulting to the first 150 characters) to balance information density with transmission costs.
 
-批次讀取 (read)：
-python3 gws_gmail_manager.py read --message_ids "ID1,ID2" --full_body
+### 2. Pure Technical Contracts
+* **Type Safety**: Leverages **Pydantic** for domain models, ensuring data integrity and the automatic cleansing of `None` values or redundant whitespaces.
+* **Async Performance**: Implements `asyncio.Semaphore` to throttle API requests, balancing speed with system stability [cite: 2026-02-07].
 
-批次管理 (manage)：
-python3 gws_gmail_manager.py manage --action_type trash --message_ids "ID1,ID2"
+### 3. Defensive & State-less Principles
+* **Path Guarding**: Strictly rejects default path assumptions; all outputs are guarded by directory existence checks [cite: 2026-02-26].
+* **Action Safty**: using `trash` (safe/recoverable) instead of  `delete` (permanent purification) to ensure operational safety.
 
-英文版本 (English)
-GWS Gmail Manager: 
 
-A Gmail management tool . By encapsulating the Google Workspace CLI (gws), this tool provides AI Agents with a strongly-typed, high-performance, and token-efficient interface for automated mailbox maintenance.
 
-🌸 Key Features
-Token Efficiency Excellence:
+讓 AI Agent 成為數位信箱的專業淨化使者。本工具專為追求極致效率的開發者設計，將複雜的 Gmail 管理轉化為強型別、高安全性且 Token 友善的自動化流程。
 
-Enriched List Mode: Concurrently fetches subjects and senders during listing, drastically reducing redundant read calls.
+## 為什麼選擇 GWS Gmail Manager
 
-Smart Truncation: Automatically prunes email bodies (default 150 chars) to prevent token overflow.
+在自動化信箱管理的過程中，冗長的郵件正文常導致 LLM Token 爆量。本插件核心圍繞「通訊純淨度」設計，透過 Pydantic 強型別驗證與智慧解析機制，確保 Agent 僅接收最精煉、且經過解碼的有效資訊。
 
-Defensive Output: Minifies JSON by stripping None values and redundant whitespaces.
+## 技能矩陣 (Skill Marketplace)
 
-Strict Engineering Standards:
+本插件提供三種核心技能模式，協助您優雅地控制郵件流：
 
-Strongly-Typed Contracts: Leverages Pydantic for domain models, ensuring data integrity and purity.
+| 技能模式 | 核心功能 | 關鍵參數 |
+| :--- | :--- | :--- |
+| **list** | 執行富郵件清單檢索，內建主旨與寄件者併發獲取機制。 | `--query`, `--limit` |
+| **read** | 支援多 ID 批次讀取，預設執行智慧截斷以防止 Token 溢出。 | `--message_ids`, `--full_body` |
+| **manage** | 批次執行分類、歸檔、垃圾桶移入或永久淨化動作。 | `--action_type`, `--target_label` |
 
-Layered Architecture: Strictly decouples Infrastructure, Domain Models, and Business Logic.
+## 快速上手 (Getting Started)
 
-Concurrency Control: Implements asyncio.Semaphore to throttle API requests, balancing speed with system stability.
+### 環境要求
+1.  **底層依賴**：確保環境中已安裝 `@googleworkspace/cli (gws)` 執行檔。
+2.  **認證授權**：需完成 OAuth 2.0 認證流程，並取得憑證。
+3.  **路徑配置**：所有日誌或輸出若需導向檔案，請遵循防禦性原則，先行建立父目錄。
 
-Defensive Initialization: Adheres to the "Path Dependency Trap" review; all file outputs are guarded by directory existence checks .
+### 配置環境變數
+```bash
+# 指向包含認證憑證的配置目錄
+export GOOGLE_WORKSPACE_CLI_CONFIG_DIR="/app/.openclaw/config/gws"
+```
 
-🛠 System Requirements
-Core Dependency: Requires @googleworkspace/cli (gws) installed in the environment.
 
-Authentication: OAuth 2.0 credentials must be configured and placed in the config directory.
+## 專案結構 (How it Works)
 
-Environment Variable: GOOGLE_WORKSPACE_CLI_CONFIG_DIR must point to the directory containing your gws configuration.
+本插件遵循嚴謹的工程分層架構，確保邏輯的純粹與穩定性：
 
-🚀 Usage
-The tool operates in three primary skill modes:
+```text
+gws-gmail-manager/
+├── gws_gmail_manager.py     # 核心業務邏輯與 Entry Point
+├── SKILL.md                 # 針對 AI Agent 的指令規範
+└── README.md                # 專案概覽與使用手冊
+```
 
-Search (list):
-python3 gws_gmail_manager.py list --limit 10 --query "is:unread"
+## 核心設計哲學
 
-Batch Read (read):
-python3 gws_gmail_manager.py read --message_ids "ID1,ID2" --full_body
+### 1. 極致 Token 優化 (Token Efficiency)
+* **Enriched List**: 檢索階段即同步抓取主旨與寄件者，消除重複呼叫 read 的無謂消耗。
+* **Smart Truncation**: 讀取郵件時預設僅取前 150 字，在資訊獲取與傳輸成本間取得完美平衡。
 
-Batch Manage (manage):
-python3 gws_gmail_manager.py manage --action_type trash --message_ids "ID1,ID2"
+### 2. 強型別契約 (Type Safety)
+* 採用 **Pydantic** 定義領域模型，並具備 Base64url 自動解碼機制，確保 Agent 接收的是純淨無汙垢的資料。
+
+### 3. 防禦性批次操作 (Safe Operations)
+* **併發控制**：支援多 ID 批次處理，提升處理效率的同時維持系統穩定。
+* **安全動作**：用 `trash`（安全還原）替代 `delete`（永久淨化）動作，確保操作安全性。
